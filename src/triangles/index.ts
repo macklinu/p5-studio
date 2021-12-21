@@ -1,6 +1,6 @@
 import type { default as p5 } from 'p5'
 
-export function sketch(p: p5) {
+export default function sketch(p: p5) {
   const widthIncrement = 10
   const heightIncrement = 20
   const probability = 0.66

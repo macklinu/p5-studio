@@ -1,7 +1,7 @@
 import type { default as p5 } from 'p5'
-import { createCycle } from '../src/createCycle'
+import { createCycle } from '../createCycle'
 
-export function sketch(p: p5) {
+export default function sketch(p: p5) {
   const step = 20
 
   let paletteIndex = 0

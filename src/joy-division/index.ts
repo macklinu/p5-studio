@@ -5,7 +5,7 @@ interface Line {
   y: number
 }
 
-export function sketch(p: p5) {
+export default function sketch(p: p5) {
   const step = 10
 
   function createLines(): Line[][] {

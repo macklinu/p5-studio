@@ -1,0 +1,91 @@
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import p5 from 'p5'
+
+const defaultExport = (mod: { default: (p: p5) => void }) => mod.default
+
+const sketches = {
+  joyDivision: () => import('./joy-division'),
+  tiledLines: () => import('./tiled-lines'),
+  triangles: () => import('./triangles'),
+}
+
+type SketchName = keyof typeof sketches
+
+function App() {
+  const [selectedSketchName, setSelectedSketchName] =
+    React.useState<SketchName>(
+      (localStorage.getItem('sketch') as SketchName) ?? 'joyDivision'
+    )
+
+  React.useEffect(() => {
+    sketches[selectedSketchName]()
+      .then(defaultExport)
+      .then((sketch) => {
+        const sketchEl = document.getElementById('sketch')
+        if (sketchEl) {
+          sketchEl.innerHTML = ''
+          new p5(sketch, sketchEl)
+        }
+      })
+  }, [selectedSketchName])
+
+  return (
+    <main className='container flex flex-row'>
+      <section>
+        <ul id='sketch-list'>
+          {Object.keys(sketches).map((sketchName) => (
+            <SketchButton
+              key={sketchName}
+              sketchName={sketchName as SketchName}
+              isSelected={sketchName === selectedSketchName}
+              onClick={() => {
+                setSelectedSketchName(sketchName as SketchName)
+                localStorage.setItem('sketch', sketchName)
+              }}
+            />
+          ))}
+        </ul>
+      </section>
+      <section className='px-16'>
+        <Frame>
+          <div id='sketch' />
+        </Frame>
+      </section>
+    </main>
+  )
+}
+
+interface SketchButtonProps {
+  sketchName: SketchName
+  isSelected: boolean
+  onClick: () => void
+}
+
+function SketchButton({ sketchName, isSelected, onClick }: SketchButtonProps) {
+  const className = ['text-blue-600 underline', isSelected && 'font-bold']
+    .filter(Boolean)
+    .join(' ')
+
+  return (
+    <li key={sketchName}>
+      <button className={className} onClick={onClick}>
+        {sketchName}
+      </button>
+    </li>
+  )
+}
+
+interface FrameProps {
+  children: React.ReactNode
+}
+
+function Frame({ children }: FrameProps) {
+  return (
+    <div className='frame-border'>
+      <div className='frame-inset'>{children}</div>
+    </div>
+  )
+}
+
+ReactDOM.render(<App />, document.getElementById('app'))
