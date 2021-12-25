@@ -1,9 +1,11 @@
 import type { default as p5 } from 'p5'
 import { createCycle } from '../createCycle'
+import { useSeed } from '../useSeed'
 
 export default function sketch(p: p5) {
   const step = 20
 
+  let seed: number
   let paletteIndex = 0
 
   const palettes = [
@@ -18,8 +20,9 @@ export default function sketch(p: p5) {
   }
 
   p.draw = () => {
+    seed = useSeed(p)
     const [backgroundColor, ...lineColors] = p.shuffle(
-      palettes[paletteIndex % palettes.length]
+      palettes[p.abs(paletteIndex - palettes.length) % palettes.length]
     )
     p.background(backgroundColor)
     p.strokeWeight(4)
@@ -41,17 +44,17 @@ export default function sketch(p: p5) {
 
   p.keyPressed = () => {
     if (p.key === 's') {
-      p.saveCanvas(`tiled-lines-${new Date().toISOString()}`, 'png')
+      p.saveCanvas(`tiled-lines-${seed}`, 'png')
     }
-    if (p.keyCode === p.LEFT_ARROW) {
+    if (p.key === 'j') {
       paletteIndex--
       p.redraw()
     }
-    if (p.keyCode === p.RIGHT_ARROW) {
+    if (p.key === 'k') {
       paletteIndex++
       p.redraw()
     }
-    if (p.key === ' ') {
+    if (p.key === 'r') {
       p.redraw()
     }
   }

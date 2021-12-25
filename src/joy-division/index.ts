@@ -1,4 +1,5 @@
 import type { default as p5 } from 'p5'
+import { useSeed } from '../useSeed'
 
 interface Line {
   x: number
@@ -7,6 +8,8 @@ interface Line {
 
 export default function sketch(p: p5) {
   const step = 10
+
+  let seed: number
 
   function createLines(): Line[][] {
     const size = p.width
@@ -38,6 +41,7 @@ export default function sketch(p: p5) {
   }
 
   p.draw = () => {
+    seed = useSeed(p)
     p.background(255)
     p.stroke(0)
     p.strokeWeight(2)
@@ -58,10 +62,10 @@ export default function sketch(p: p5) {
 
   p.keyPressed = () => {
     if (p.key === 's') {
-      p.saveCanvas(`joy-division-${new Date().toISOString()}`, 'png')
+      p.saveCanvas(`joy-division-${seed}`, 'png')
     }
 
-    if (p.key === ' ') {
+    if (p.key === 'r') {
       p.redraw()
     }
   }

@@ -1,4 +1,5 @@
 import type { default as p5 } from 'p5'
+import { useSeed } from '../useSeed'
 
 export default function sketch(p: p5) {
   const widthIncrement = 10
@@ -36,6 +37,8 @@ export default function sketch(p: p5) {
     }
   }
 
+  let seed: number
+
   p.setup = setup
   p.draw = draw
   p.keyTyped = keyTyped
@@ -48,6 +51,7 @@ export default function sketch(p: p5) {
   }
 
   function draw() {
+    seed = useSeed(p)
     p.background(255)
 
     for (let i = 0; i < p.width; i += widthIncrement) {
@@ -68,9 +72,9 @@ export default function sketch(p: p5) {
 
   function keyTyped() {
     if (p.key === 's') {
-      p.saveCanvas(`triangles-${new Date().toISOString()}`, 'png')
+      p.saveCanvas(`triangles-${seed}`, 'png')
     }
-    if (p.key === ' ') {
+    if (p.key === 'r') {
       p.redraw()
     }
   }
