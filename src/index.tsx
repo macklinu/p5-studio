@@ -13,21 +13,29 @@ const sketches = {
 type SketchName = keyof typeof sketches
 
 function App() {
+  const sketchRef = React.useRef<p5 | undefined>()
+
   const [selectedSketchName, setSelectedSketchName] =
     React.useState<SketchName>(
       (localStorage.getItem('sketch') as SketchName) ?? 'joyDivision'
     )
 
   React.useEffect(() => {
-    sketches[selectedSketchName]()
+    const importSketch = sketches[selectedSketchName]
+
+    importSketch()
       .then(defaultExport)
       .then((sketch) => {
         const sketchEl = document.getElementById('sketch')
+
         if (sketchEl) {
-          sketchEl.innerHTML = ''
-          new p5(sketch, sketchEl)
+          sketchRef.current = new p5(sketch, sketchEl)
         }
       })
+
+    return () => {
+      sketchRef.current?.remove()
+    }
   }, [selectedSketchName])
 
   return (
