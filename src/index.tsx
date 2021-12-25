@@ -10,6 +10,7 @@ const sketches = {
   triangles: () => import('./triangles'),
   imagePixels: () => import('./imagePixels'),
   lines001: () => import('./lines001'),
+  digitalRain: () => import('./digitalRain'),
 }
 
 type SketchName = keyof typeof sketches
