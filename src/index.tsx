@@ -8,6 +8,7 @@ const sketches = {
   joyDivision: () => import('./joy-division'),
   tiledLines: () => import('./tiled-lines'),
   triangles: () => import('./triangles'),
+  imagePixels: () => import('./imagePixels'),
 }
 
 type SketchName = keyof typeof sketches
